@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ZONE=${KUBE_AWS_ZONE:-us-west-2a}
-MASTER_SIZE=${MASTER_SIZE:-}
-NODE_SIZE=${NODE_SIZE:-}
+ZONE=${KUBE_AWS_ZONE:-us-east-1}
+MASTER_SIZE=${MASTER_SIZE:-m3.large}
+NODE_SIZE=${NODE_SIZE:-t2.large}
 NUM_NODES=${NUM_NODES:-4}
 
 # Dynamically set node sizes so that Heapster has enough space to run
@@ -52,7 +52,7 @@ fi
 
 # Optional: Set AWS_S3_BUCKET to the name of an S3 bucket to use for uploading binaries
 # (otherwise a unique bucket name will be generated for you)
-#  AWS_S3_BUCKET=kubernetes-artifacts
+AWS_S3_BUCKET=kubernetes-artifacts
 
 # Because regions are globally named, we want to create in a single region; default to us-east-1
 AWS_S3_REGION=${AWS_S3_REGION:-us-east-1}
@@ -65,7 +65,7 @@ EXTRA_DOCKER_OPTS="${EXTRA_DOCKER_OPTS:-}"
 
 INSTANCE_PREFIX="${KUBE_AWS_INSTANCE_PREFIX:-kubernetes}"
 CLUSTER_ID=${INSTANCE_PREFIX}
-VPC_NAME=${VPC_NAME:-kubernetes-vpc}
+VPC_NAME=${VPC_NAME:-ToursKubernetesQANV}
 AWS_SSH_KEY=${AWS_SSH_KEY:-$HOME/.ssh/kube_aws_rsa}
 CONFIG_CONTEXT="${KUBE_CONFIG_CONTEXT:-aws_${INSTANCE_PREFIX}}"
 IAM_PROFILE_MASTER="kubernetes-master"
@@ -86,12 +86,12 @@ MASTER_NAME="${INSTANCE_PREFIX}-master"
 MASTER_TAG="${INSTANCE_PREFIX}-master"
 NODE_TAG="${INSTANCE_PREFIX}-minion"
 NODE_SCOPES=""
-NON_MASQUERADE_CIDR="${NON_MASQUERADE_CIDR:-10.0.0.0/8}" # Traffic to IPs outside this range will use IP masquerade
-SERVICE_CLUSTER_IP_RANGE="${SERVICE_CLUSTER_IP_RANGE:-10.0.0.0/16}"  # formerly PORTAL_NET
-CLUSTER_IP_RANGE="${CLUSTER_IP_RANGE:-10.244.0.0/16}"
-MASTER_IP_RANGE="${MASTER_IP_RANGE:-10.246.0.0/24}"
-SSH_CIDR="${SSH_CIDR:-0.0.0.0/0}" # IP to restrict ssh access to nodes/master
-HTTP_API_CIDR="${HTTP_API_CIDR:-0.0.0.0/0}" # IP to restrict HTTP API access
+NON_MASQUERADE_CIDR="${NON_MASQUERADE_CIDR:-172.0.0.0/8}" # Traffic to IPs outside this range will use IP masquerade
+SERVICE_CLUSTER_IP_RANGE="${SERVICE_CLUSTER_IP_RANGE:-172.0.0.0/16}"  # formerly PORTAL_NET
+CLUSTER_IP_RANGE="${CLUSTER_IP_RANGE:-172.244.0.0/16}"
+MASTER_IP_RANGE="${MASTER_IP_RANGE:-172.246.0.0/24}"
+SSH_CIDR="${SSH_CIDR:-10.0.0.0/8}" # IP to restrict ssh access to nodes/master
+HTTP_API_CIDR="${HTTP_API_CIDR:-10.0.0.0/8}" # IP to restrict HTTP API access
 # If set to an Elastic IP address, the master instance will be associated with this IP.
 # Otherwise a new Elastic IP will be acquired
 # (We used to accept 'auto' to mean 'allocate elastic ip', but that is now the default)
@@ -120,7 +120,7 @@ fi
 
 # Optional: Install cluster DNS.
 ENABLE_CLUSTER_DNS="${KUBE_ENABLE_CLUSTER_DNS:-true}"
-DNS_SERVER_IP="${DNS_SERVER_IP:-10.0.0.10}"
+DNS_SERVER_IP="${DNS_SERVER_IP:-172.0.0.10}"
 DNS_DOMAIN="cluster.local"
 DNS_REPLICAS=1
 
@@ -145,7 +145,7 @@ ADMISSION_CONTROL=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolume
 ENABLE_NODE_PUBLIC_IP=${KUBE_ENABLE_NODE_PUBLIC_IP:-true}
 
 # OS options for minions
-KUBE_OS_DISTRIBUTION="${KUBE_OS_DISTRIBUTION:-jessie}"
+KUBE_OS_DISTRIBUTION="${KUBE_OS_DISTRIBUTION:-trusty}"
 MASTER_OS_DISTRIBUTION="${KUBE_OS_DISTRIBUTION}"
 NODE_OS_DISTRIBUTION="${KUBE_OS_DISTRIBUTION}"
 KUBE_NODE_IMAGE="${KUBE_NODE_IMAGE:-}"
